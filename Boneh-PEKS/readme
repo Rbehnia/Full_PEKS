@@ -1,1 +1,3 @@
 This is Boneh PEKS full implementation
+The base implementation is from MIRACL, please respect their licenses. 
+Please email me if you have any problem running the code at behniar(at)oregonstate.edu
