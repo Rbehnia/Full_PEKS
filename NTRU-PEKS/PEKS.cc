@@ -773,9 +773,9 @@ void sendPeksToServer(string path){
     zmq::context_t context(1);
 	zmq::socket_t socket(context,ZMQ_REQ);
 	printf("   Connecting to server...");
-	//socket.connect ("tcp://localhost:5560");
+	socket.connect ("tcp://localhost:5560");
 	//socket.connect ("tcp://128.193.38.12:5560");
-	socket.connect ("tcp://34.216.2.150:5560");
+	//socket.connect ("tcp://34.216.2.150:5560");
 	printf("OK!\n");
 	string line1 = "";
     string line2 = ""; string line3 = "";		
@@ -980,8 +980,8 @@ void sendTrapdoorToServer(string path){
     zmq::context_t context(1);
 	zmq::socket_t socket(context,ZMQ_REQ);
 	printf("   Connecting to server...");
-	//socket.connect ("tcp://localhost:5559");
-	socket.connect ("tcp://34.216.2.150:5559");
+	socket.connect ("tcp://localhost:5559");
+	//socket.connect ("tcp://34.216.2.150:5559");
 	//socket.connect ("tcp://128.193.38.12:5559");
 	printf("OK!\n");
 	string line1 = "";
@@ -1296,10 +1296,10 @@ int main()
 	
 	// Added for ENRON Extension 
     long int keyword[N0], Ciphertext[2][N0], Ciphertext2[N0];
-	string skPath = "/scratch/simulation_ozgur/NTRU_PEKS/keys/sk/";
-	string pkPath = "/scratch/simulation_ozgur/NTRU_PEKS/keys/pk/";
-	string path = "/scratch/simulation_ozgur/NTRU_PEKS/textfiles";
-	string serverPath = "/scratch/simulation_ozgur/NTRU_PEKS/server/";
+	string skPath = "/NTRU_PEKS/keys/sk/";
+	string pkPath = "/NTRU_PEKS/keys/pk/";
+	string path = "/NTRU_PEKS/textfiles";
+	string serverPath = "/NTRU_PEKS/server/";
 	TYPE_KEYWORD_DICTIONARY listOfFiles;
 	ZZX SK_td[2];
 	std::set<string>::iterator it;
@@ -1491,8 +1491,7 @@ if (choiceMain == 2){
 	
 		cout<<"Search time    "<<std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count()/numOfFiles<<" ms"<<endl;
 		
-		//findFileByKeywords(listOfFiles,  path, SK_td);
-	//listOfFiles.insert("hello");
+		
 	
 		for (std::set<string>::iterator it = listOfFiles.begin(); it != listOfFiles.end(); ++it) {
 			cout << endl<<"The file name is" << *it <<endl<<endl;
@@ -1529,10 +1528,10 @@ if (choiceMain == 2){
 		else if (serverChoice == 3){ goto labelMain;}
 	}
 
-//receivingPeksServer("/home/bob/Documents/MyCode/Bonehpeks/textfiles/server"); goto labelMain;}
 
 
-	//if (choiceMain == 4){ 	
+
+
 
 	if (choiceMain == 4){exit(1);}
 
@@ -1644,28 +1643,8 @@ if (choiceMain == 2){
 //                               
 //                      SEARCHING IN FILES
 //==============================================================================
-//==============================================================================
-	/*TYPE_KEYWORD_DICTIONARY listOfFiles; 
 
-	findFileByKeywords(listOfFiles, file_name,  path, SK_td);
-	//listOfFiles.insert("hello");
-	for (set<string>::iterator it = listOfFiles.begin(); it != listOfFiles.end(); ++it) {
-		cout << endl<<"The file name is" << *it <<endl<<endl;
-	}*/
-
-/*	fstream ifile1;
-	string linak1,linak2,linak3;
-	ifile1.open ("/home/bob/Documents/MyCode/NTRU-PEKS/textfiles/1.sc",ios::in);
-    if (!ifile1.is_open()) 
-		{cout << "No such file exist"<<endl;}
-    while (getline(ifile1,linak1))
-    {getline(ifile1,linak2);getline(ifile1,linak3);
-		cout<< "line 1: " <<linak1<<endl<<endl;
-		cout<< "line 2: " <<linak2<<endl<<endl;
-		cout<< "line 3: " <<linak3<<endl<<endl;
-     }*/
-
- //   Encrypt_Test(1, MPKD, MSKD);
+	
 
 	free(MSKD);
 	free(MPKD);	
