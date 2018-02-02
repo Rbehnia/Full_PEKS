@@ -1,3 +1,8 @@
 This is Boneh PEKS full implementation
 The base implementation is from MIRACL, please respect their licenses. 
 Please email me if you have any problem running the code at behniar(at)oregonstate.edu
+Dependences: You would need the following libraries
+
+MIRACL: https://github.com/miracl/MIRACL
+Zmq: http://zeromq.org/intro:get-the-software
+
