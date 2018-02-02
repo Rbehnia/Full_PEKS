@@ -1,3 +1,9 @@
 This is NTRU PEKS full implementation
 Some of the files are taken from Thomas Prest's project https://github.com/tprest/Lattice-IBE and some of them are edited for this transformation. 
 Therefore, please respect its license and requirements. Shoot me an email at behniar(at)oregonstate.edu if you have any questions.
+
+Dependences: You would need the following libraries
+GMP: https://gmplib.org/
+NTL: http://www.shoup.net/ntl/
+Zmq: http://zeromq.org/intro:get-the-software
+and Blake2b:  https://github.com/BLAKE2/libb2 
