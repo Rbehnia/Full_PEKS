@@ -939,55 +939,53 @@ void writeTrapdoorFile(string fname_with_path, ZZX SK_td[2]){
 	ofile.close();
 }
 
-
+// burnett
 void sendTrapdoorToServer(string path){
-    zmq::context_t context(1);
+	zmq::context_t context(1);
 	zmq::socket_t socket(context,ZMQ_REQ);
+
 	printf("   Connecting to server...");
 	socket.connect ("tcp://localhost:5559");
 	//socket.connect ("tcp://34.216.2.150:5559");
 	//socket.connect ("tcp://128.193.38.12:5559");
 	printf("OK!\n");
+
 	string line1 = "";
-	string fname_with_path;
 	size_t sizeLine1 = 0;
 	ZZX td; 
-	auto start = time_now;
-    auto end = time_now;
-	float sum = 0.0;
-	
+	auto network_start, network_end, disk_start, disk_end;
+	float network_sum = 0.0, disk_sum = 0.0;
+
 	fstream ifile;
-	fname_with_path = "";
-	fname_with_path.append(path);
-	//file_name = "";
-	//file_name.append("/");
-	fname_with_path.append("trapdoor");
-	size_t size1;
+	string fname_with_path = path + "trapdoor";
+	
+	disk_start = time_now;
 	ifile.open(fname_with_path.c_str());
 	if (!ifile.is_open()){cout << "The file "<<fname_with_path<< "is NOT fine \n"<<endl;}
-		while(getline(ifile, line1)){
-			cout << "The lines in sendTrapdoor "<<line1<<endl;
-			sizeLine1 = (size_t)line1.length();
-			zmq::message_t request_line1(sizeLine1);
-			memcpy (request_line1.data (), line1.c_str(), sizeLine1);
-			
-			start = time_now;
-			socket.send (request_line1);
-			zmq::message_t reply;
-			socket.recv (&reply);
-			end = time_now;
-			sum += (float)(std::chrono::duration_cast<std::chrono::microseconds>(end-start).count());
-		}
+	while(getline(ifile, line1)){
+		cout << "The lines in sendTrapdoor "<<line1<<endl;
+		sizeLine1 = (size_t)line1.length();
+		zmq::message_t request_line1(sizeLine1);
+		memcpy (request_line1.data (), line1.c_str(), sizeLine1);
 
-	cout<<	"Sending Trapdoor takes   "<<sum<<" microsecond"<<endl;
-		
-			
+		network_start = time_now;
+		socket.send (request_line1);
+		zmq::message_t reply;
+		socket.recv (&reply);
+		network_end = time_now;
+
+		network_sum += (float)(std::chrono::duration_cast<std::chrono::microseconds>(network_end-network_start).count());
+	}
+	disk_end = time_now;
+	disk_sum = (float)(std::chrono::duration_cast<std::chrono::microseconds>(disk_end-disk_start).count());
+	disk_sum -= network_sum;
+
+	cout<<	"Sending Trapdoor takes   " << network_sum << " microseconds" << endl;
+	cout<<	"Reading Disk takes   " << disk_sum << " microseconds" << endl;
+
 	ifile.close();
 	socket.close();
-
-
-		
-	}
+}
 
 
 void writeTrapdoortoFileServer(string fname_with_path,  string x){
@@ -1010,54 +1008,39 @@ void writeTrapdoortoFileServer(string fname_with_path,  string x){
 
 
 void receivingTrapdoorServer(string serverPath){
-	
-	
 	zmq::context_t context (1);
-    zmq::socket_t socket (context, ZMQ_REP);
-    socket.bind ("tcp://*:5559");
+	zmq::socket_t socket (context, ZMQ_REP);
+	socket.bind ("tcp://*:5559");
 
-		ofstream ofile;
-		string fname_with_path1 = "";
-		fname_with_path1.append(serverPath);
-		string file_name = "trapdoor";
-		fname_with_path1.append(file_name);
-		size_t size1;
-		ofile.open (fname_with_path1.c_str(),  ios::binary); 
-
+	ofstream ofile;
+	string file_name = "trapdoor";
+	string fname_with_path1 = serverpath + file_name;
+	size_t size1;
+	ofile.open (fname_with_path1.c_str(),  ios::binary); 
 
 	int numOfLinesTrapdoor = 0;
-    while (numOfLinesTrapdoor < 2) {
-		
-        zmq::message_t request1;
-        socket.recv (&request1);
-        string rpl1 = string(static_cast<char*>(request1.data()), request1.size());
-        cout <<  rpl1<< endl;
-		
-		zmq::message_t reply1 (8);
-        memcpy (reply1.data (), "World", 8);
-        socket.send (reply1);
-		
-		writeTrapdoortoFileServer(serverPath, rpl1);
+	while (numOfLinesTrapdoor < 2) {
+		zmq::message_t request1;
+		socket.recv (&request1);
+		string rpl1 = string(static_cast<char*>(request1.data()), request1.size());
+		cout <<  rpl1<< endl;
 
+		zmq::message_t reply1 (8);
+		memcpy (reply1.data (), "World", 8);
+		socket.send (reply1);
+
+		writeTrapdoortoFileServer(serverPath, rpl1);
 		numOfLinesTrapdoor++; 
 
-        //  Do some 'work'
+		//  Do some 'work'
+		//  Send reply back to client
+	}
 
-        //  Send reply back to client
-
-    }
-
-
-	
 	cout << "All files have been received and stored in "<< serverPath << "folder "<< endl;
 	socket.close();
-	
 }
 
-
 void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path, string serverPath){
-	
-	
 	ZZX SK_td[2];
 	string tdfname = "";
 	tdfname.append(serverPath);
@@ -1068,7 +1051,7 @@ void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path
 	fileTrapdoor >> SK_td[1];
 
 	fileTrapdoor.close();
-cout << "We are in Find FILE BY KEYWORD now: "<<endl<<endl;
+	cout << "We are in Find FILE BY KEYWORD now: "<<endl<<endl;
 	int rep;
 	bool flagvalid = false; 
 	CC_t SKtd_FFT[N0]; 
@@ -1077,25 +1060,23 @@ cout << "We are in Find FILE BY KEYWORD now: "<<endl<<endl;
 	int counter = 0;
 	long message[N0];
 	string auxstring[N0];
-    string line1 = "";
-    string line2 = "";	
-	string line3 = "";
-    ZZXToFFT(SKtd_FFT, SK_td[1]);
+	string line1, line2, line3;
+	ZZXToFFT(SKtd_FFT, SK_td[1]);
 	string temp1,temp2="",fileNameforList="", fname_with_path;
 	fstream ifile;
-	
-	
+
+
 	for (int filecount = 1; filecount < numOfFiles; filecount++)
 	{	    
-		string line1 = "";
-		string line2 = "";	
-		string line3 = "";
+		line1 = "";
+		line2 = "";	
+		line3 = "";
 		fstream ifile;
 		fname_with_path = "";
 		ifile.close();
 		fname_with_path.append(path);
 		string file_name = "";
-	//	file_name.append("/");
+		//	file_name.append("/");
 		temp1 = to_string(filecount);
 		file_name.append(temp1);
 		fileNameforList.append(file_name);
@@ -1108,40 +1089,37 @@ cout << "We are in Find FILE BY KEYWORD now: "<<endl<<endl;
 		string word ="";
 		string target = "";
 		while (getline(ifile,line1)){
-	//======	
-			
 			getline(ifile,line2);
 			getline(ifile,line3);
+
 			istringstream ss;
 			ss.str(line1);
 			counter =0;
 			while(ss >> word){
- 
-			Ciphertext_file[0][counter] = stol(word); counter++;}
+				Ciphertext_file[0][counter] = stol(word); counter++;
+			}
+
 			istringstream ss1;
 			ss1.str(line2);
 			counter =0;
-			while(ss1 >> word)
-			{
+			while(ss1 >> word){
 				Ciphertext_file[1][counter] = stol(word); counter++;
 			}
 
 			istringstream ss2;		
 			ss2.str(line3);
 			counter =0;
-			while(ss2 >> word)
-			{
+			while(ss2 >> word){
 				Ciphertext2_file[counter] = stol(word); counter++;
 			}
 
 			PEKS_Test(message, Ciphertext_file, SKtd_FFT);
 			rep = 0;
 			for(int j=0; j<N0; j++){
-				
+
 				if( Ciphertext2_file[j] == message[j])
 				{
 					rep +=1 ;
-					
 				}	
 				if (rep == N0-1){
 					flagvalid =true;
@@ -1149,18 +1127,11 @@ cout << "We are in Find FILE BY KEYWORD now: "<<endl<<endl;
 					cout << "it matched";
 					listOfFiles.insert(target);
 				}
-
-
 			}	
-
-				
 		}
-
 	}
 	ifile.close();		
 }
-
-
 
 //============================== MENU ===========================================
 
@@ -1221,26 +1192,6 @@ void serverMenu(){
 	cout << "Choice: ";
 
 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 //==============================================================================
 //==============================================================================
