@@ -925,18 +925,19 @@ void receivingPeksServer(string serverPath){
 
 
 void writeTrapdoorFile(string fname_with_path, ZZX SK_td[2]){
-
-
-
 	fname_with_path.append("trapdoor");
-
 	ofstream ofile;
+
+	auto file_write_start = time_now;
 	ofile.open (fname_with_path.c_str(),  ios::binary);
 	ofile << SK_td[0]<<endl;
 	ofile<< SK_td[1];
-
+	auto file_write_end = time_now;
 
 	ofile.close();
+	float file_write_time = (float)(std::chrono::duration_cast<std::chrono::microseconds>(file_write_end-file_write_start).count());
+	cout << "Writing Trapdoor to file takes " << file_write_time << " microseconds" << endl;
+	
 }
 
 // burnett
@@ -989,20 +990,17 @@ void sendTrapdoorToServer(string path){
 
 
 void writeTrapdoortoFileServer(string fname_with_path,  string x){
-
-
-
-
-	//string fname_with_path;
-	//recreate the file name
-
 	fname_with_path.append("trapdoor");
-
 	ofstream ofile;
+
+	auto file_write_start = time_now;
 	ofile.open (fname_with_path.c_str(), ios_base::app | ios::binary); 
 	ofile << x ;
 	ofile<<endl;
+	auto file_write_end = time_now;
 
+	float file_write_time = (float)(std::chrono::duration_cast<std::chrono::microseconds>(file_write_end-file_write_start).count());
+	cout << "Writing Trapdoor to file server takes " << file_write_time << " microseconds" << endl;
 	ofile.close();
 }
 
@@ -1046,9 +1044,14 @@ void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path
 	tdfname.append(serverPath);
 	tdfname.append("trapdoor");
 	ifstream fileTrapdoor;
+
+	auto read_trapdoor_start = time_now;
 	fileTrapdoor.open(tdfname.c_str());
 	fileTrapdoor >> SK_td[0];
 	fileTrapdoor >> SK_td[1];
+	auto read_trapdoor_end = time_now;
+
+	float file_read_time = (float)(std::chrono::duration_cast<std::chrono::microseconds>(read_trapdoor_end-read_trapdoor_start).count());
 
 	fileTrapdoor.close();
 	cout << "We are in Find FILE BY KEYWORD now: "<<endl<<endl;
@@ -1065,7 +1068,8 @@ void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path
 	string temp1,temp2="",fileNameforList="", fname_with_path;
 	fstream ifile;
 
-
+	auto search_files_start = time_now, peks_test_start = time_now, peks_test_end = time_now;
+	float peks_test_total = 0.0;
 	for (int filecount = 1; filecount < numOfFiles; filecount++)
 	{	    
 		line1 = "";
@@ -1112,8 +1116,10 @@ void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path
 			while(ss2 >> word){
 				Ciphertext2_file[counter] = stol(word); counter++;
 			}
-
+			peks_test_start = time_now;
 			PEKS_Test(message, Ciphertext_file, SKtd_FFT);
+			peks_test_end = time_now;
+			peks_test_total += (float)(std::chrono::duration_cast<std::chrono::microseconds>(peks_test_end-peks_test_start).count());
 			rep = 0;
 			for(int j=0; j<N0; j++){
 
@@ -1130,6 +1136,15 @@ void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path
 			}	
 		}
 	}
+	auto search_files_end = time_now;
+	float total_time = (float)(std::chrono::duration_cast<std::chrono::microseconds>(search_files_end-search_files_start).count());
+	float search_files_total = total_time - peks_test_total;
+	
+	cout << "Reading Trapdoor from file server takes " << file_read_time << " microseconds" << endl;
+	cout << "Total search time: " << total_time << " microseconds" << endl;
+	cout << "File searching time: " << search_files_total << " microseconds" << endl;
+	cout << "Peks test total time: " << peks_test_total << " microseconds" << endl;
+	
 	ifile.close();		
 }
 
