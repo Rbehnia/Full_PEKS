@@ -5,8 +5,8 @@
 ## Debug
 ProjectName            :=PEKSv2
 ConfigurationName      :=Debug
-WorkspacePath          :=/scratch/simulation_ozgur/NTRU_PEKS
-ProjectPath            :=/scratch/simulation_ozgur/NTRU_PEKS
+WorkspacePath          :=/scratch/nathan_benchmark/Full_PEKS/NTRU-PEKS
+ProjectPath            :=/scratch/nathan_benchmark/Full_PEKS/NTRU-PEKS
 IntermediateDirectory  :=./Debug
 OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
@@ -92,7 +92,7 @@ PreBuild:
 ## Objects
 ##
 $(IntermediateDirectory)/Scheme.cc$(ObjectSuffix): Scheme.cc $(IntermediateDirectory)/Scheme.cc$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/scratch/simulation_ozgur/NTRU_PEKS/Scheme.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Scheme.cc$(ObjectSuffix) $(IncludePath)
+	$(CXX) $(IncludePCH) $(SourceSwitch) $(ProjectPath)"/Scheme.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Scheme.cc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/Scheme.cc$(DependSuffix): Scheme.cc
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Scheme.cc$(ObjectSuffix) -MF$(IntermediateDirectory)/Scheme.cc$(DependSuffix) -MM Scheme.cc
 
@@ -100,7 +100,7 @@ $(IntermediateDirectory)/Scheme.cc$(PreprocessSuffix): Scheme.cc
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Scheme.cc$(PreprocessSuffix) Scheme.cc
 
 $(IntermediateDirectory)/io.cc$(ObjectSuffix): io.cc $(IntermediateDirectory)/io.cc$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/scratch/simulation_ozgur/NTRU_PEKS/io.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/io.cc$(ObjectSuffix) $(IncludePath)
+	$(CXX) $(IncludePCH) $(SourceSwitch) $(ProjectPath)"/io.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/io.cc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/io.cc$(DependSuffix): io.cc
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/io.cc$(ObjectSuffix) -MF$(IntermediateDirectory)/io.cc$(DependSuffix) -MM io.cc
 
@@ -108,7 +108,7 @@ $(IntermediateDirectory)/io.cc$(PreprocessSuffix): io.cc
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/io.cc$(PreprocessSuffix) io.cc
 
 $(IntermediateDirectory)/FFT.cc$(ObjectSuffix): FFT.cc $(IntermediateDirectory)/FFT.cc$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/scratch/simulation_ozgur/NTRU_PEKS/FFT.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/FFT.cc$(ObjectSuffix) $(IncludePath)
+	$(CXX) $(IncludePCH) $(SourceSwitch) $(ProjectPath)"/FFT.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/FFT.cc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/FFT.cc$(DependSuffix): FFT.cc
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/FFT.cc$(ObjectSuffix) -MF$(IntermediateDirectory)/FFT.cc$(DependSuffix) -MM FFT.cc
 
@@ -116,7 +116,7 @@ $(IntermediateDirectory)/FFT.cc$(PreprocessSuffix): FFT.cc
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/FFT.cc$(PreprocessSuffix) FFT.cc
 
 $(IntermediateDirectory)/Algebra.cc$(ObjectSuffix): Algebra.cc $(IntermediateDirectory)/Algebra.cc$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/scratch/simulation_ozgur/NTRU_PEKS/Algebra.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Algebra.cc$(ObjectSuffix) $(IncludePath)
+	$(CXX) $(IncludePCH) $(SourceSwitch) $(ProjectPath)"/Algebra.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Algebra.cc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/Algebra.cc$(DependSuffix): Algebra.cc
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Algebra.cc$(ObjectSuffix) -MF$(IntermediateDirectory)/Algebra.cc$(DependSuffix) -MM Algebra.cc
 
@@ -124,7 +124,7 @@ $(IntermediateDirectory)/Algebra.cc$(PreprocessSuffix): Algebra.cc
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Algebra.cc$(PreprocessSuffix) Algebra.cc
 
 $(IntermediateDirectory)/PEKS.cc$(ObjectSuffix): PEKS.cc $(IntermediateDirectory)/PEKS.cc$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/scratch/simulation_ozgur/NTRU_PEKS/PEKS.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/PEKS.cc$(ObjectSuffix) $(IncludePath)
+	$(CXX) $(IncludePCH) $(SourceSwitch) $(ProjectPath)"/PEKS.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/PEKS.cc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/PEKS.cc$(DependSuffix): PEKS.cc
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/PEKS.cc$(ObjectSuffix) -MF$(IntermediateDirectory)/PEKS.cc$(DependSuffix) -MM PEKS.cc
 
@@ -132,7 +132,7 @@ $(IntermediateDirectory)/PEKS.cc$(PreprocessSuffix): PEKS.cc
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/PEKS.cc$(PreprocessSuffix) PEKS.cc
 
 $(IntermediateDirectory)/Random.cc$(ObjectSuffix): Random.cc $(IntermediateDirectory)/Random.cc$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/scratch/simulation_ozgur/NTRU_PEKS/Random.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Random.cc$(ObjectSuffix) $(IncludePath)
+	$(CXX) $(IncludePCH) $(SourceSwitch) $(ProjectPath)"/Random.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Random.cc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/Random.cc$(DependSuffix): Random.cc
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Random.cc$(ObjectSuffix) -MF$(IntermediateDirectory)/Random.cc$(DependSuffix) -MM Random.cc
 
@@ -140,7 +140,7 @@ $(IntermediateDirectory)/Random.cc$(PreprocessSuffix): Random.cc
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Random.cc$(PreprocessSuffix) Random.cc
 
 $(IntermediateDirectory)/Sampling.cc$(ObjectSuffix): Sampling.cc $(IntermediateDirectory)/Sampling.cc$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/scratch/simulation_ozgur/NTRU_PEKS/Sampling.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Sampling.cc$(ObjectSuffix) $(IncludePath)
+	$(CXX) $(IncludePCH) $(SourceSwitch) $(ProjectPath)"/Sampling.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Sampling.cc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/Sampling.cc$(DependSuffix): Sampling.cc
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Sampling.cc$(ObjectSuffix) -MF$(IntermediateDirectory)/Sampling.cc$(DependSuffix) -MM Sampling.cc
 

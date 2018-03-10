@@ -6,3 +6,5 @@ All:
 clean:
 	@echo "----------Cleaning project:[ PEKSv2 - Debug ]----------"
 	@"$(MAKE)" -f  "PEKSv2.mk" clean
+reset:
+	rm -f textfiles/*.kw keys/sk/* keys/pk/* server/*
