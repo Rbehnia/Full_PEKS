@@ -31,31 +31,26 @@
 #include <set>
 #include "blake2.h"
 
+#define BENCHMARK_ALL true
+#define NUM_TESTS 1000
+
 
 using namespace std;
 using namespace NTL;
-
-//#include </boost/algorithm/string/classification.hpp>
-
-
 using namespace std;
 typedef std::set<string> TYPE_KEYWORD_DICTIONARY;
 typedef unsigned long int TYPE_COUNTER;
-
 const char* const delimiter = "`-=[]\\;\',./~!@#$%^&*()+{}|:\"<>? \n\t\v\b\r\f\a"; 
 
 
 bool file_existence(const string path , const string file_name)
 {
-
 	string fname_with_path = "";
-
 	fname_with_path.append(path);
 	fname_with_path.append(file_name);
 	ifstream infile(fname_with_path.c_str());
 	return infile.good();
 }
-
 
 bool is_word(std::string& s){
 	bool flagd =true, flagc = false;  int count = 0;
@@ -68,8 +63,6 @@ bool is_word(std::string& s){
 		}
 		if (count > 3)  flagc = true;
 	}
-
-
 	return (flagd && flagc);
 }
 
@@ -92,7 +85,6 @@ int extractWords_using_find_first_of(TYPE_KEYWORD_DICTIONARY &rKeywordsDictionar
 				boost::trim(word);
 				//convert the word to lower case
 				std::transform(word.begin(),word.end(),word.begin(),::tolower);
-				//if (word == "dfossum") 
 				capture=true;
 				if (is_word(word) && capture &&   rKeywordsDictionary.size()<numOfKeywords){
 					rKeywordsDictionary.insert(word);
@@ -113,9 +105,7 @@ int extractWords_using_find_first_of(TYPE_KEYWORD_DICTIONARY &rKeywordsDictionar
 				*pKeywordNum = *pKeywordNum + 1;
 			}
 		}
-
 	}
-
 	return 0;
 }
 
@@ -138,9 +128,7 @@ int extractKeywords(TYPE_KEYWORD_DICTIONARY &rKeywordsDictionary,
 	}
 	// Extract keywords from a file
 	extractWords_using_find_first_of(rKeywordsDictionary, &keyword_num, fin);
-
 	fin.close();
-
 	return 0;
 }
 
@@ -244,11 +232,6 @@ void KeywordstoPEKS(long  Ciphertext[2][N0], long Ciphertext2[N0],  string file_
 		for (int i =0; i<N0;i++){
 			sum +=keywordConverted[i];
 		}
-
-
-
-
-
 		uint8_t hash[64];
 		for (int i = 0; i<N0/16; i++){
 			word.append(to_string(i).c_str());
@@ -257,49 +240,32 @@ void KeywordstoPEKS(long  Ciphertext[2][N0], long Ciphertext2[N0],  string file_
 			for (int j = 0; j<16; j++){
 				keywordConverted[i*16+j] = (hash[4*j] + hash[4*j+1]*256 + hash[4*j+2]*256*256 + hash[4*j+3]*256*256*256)%q0;
 			}
-
 		}
-
 		PEKS_Enc(Ciphertext, Ciphertext2, keywordConverted, MPKD);
-
 		writePEKStoFile(file_name,path,Ciphertext, Ciphertext2);
 	}
-
-
-
 }
 
 
 // Function to generate trapdoor on user input
-void myTrapdoorGenerator( MSK_Data * MSKD,  ZZX  SK_td[2]){
-
+void myTrapdoorGenerator( MSK_Data * MSKD,  ZZX  SK_td[2], string word){
 	char keywordAux[N0] = {'0'};
 	int sum = 0;
 	long keywordConverted[N0];
 	unsigned int testing = 0;
-	auto start = time_now;
-	auto end = time_now;
 	vec_ZZ keyword_zz;
-	string word; char ch;
-	cout << endl<<"Please keyin the keyword you would like to be searched: ";
-	cin >> word;
+	char ch;
 
-
-	start = time_now;
 	for (int i =0; i<N0;i++)
 		keywordAux[i] ='0';
-
-
 	for  (int i=0; i < word.length();i++){
 		keywordAux[i] = word[i];
 		ch  = keywordAux[i];
 		keywordConverted[i] = ch;
-
 	} 
 	for (int i =word.length(); i<N0;i++){
 		keywordConverted[i] = 0;
 	}
-
 
 	cout << endl;
 	sum = 0;
@@ -320,8 +286,6 @@ void myTrapdoorGenerator( MSK_Data * MSKD,  ZZX  SK_td[2]){
 	keyword_zz = keywordVector(keywordConverted);
 	PEKS_Trapdoor(SK_td, keyword_zz, MSKD);
 	testing = PEKS_Verify_Trapdoor(SK_td, keyword_zz, MSKD);
-	end = time_now;
-	cout<<"Trapdoor Generation took    "<<std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count()<<" ms"<<endl;
 }
 
 
@@ -332,7 +296,7 @@ void findFileByKeywords(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path, cons
 	CC_t SKtd_FFT[N0]; 
 	long  Ciphertext_file[2][N0] = {0};
 	long Ciphertext2_file[N0] = {0};
-	int counter = 0;
+	int counter;
 	long message[N0];
 	string auxstring[N0];
 	string line1 = "";
@@ -365,31 +329,32 @@ void findFileByKeywords(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path, cons
 		string word ="";
 		string target = "";
 		while (getline(ifile,line1)){
-			//======	
 
 			getline(ifile,line2);
 			getline(ifile,line3);
-			istringstream ss;
-			ss.str(line1);
-			counter =0;
-			while(ss >> word){
 
-				Ciphertext_file[0][counter] = stol(word); counter++;}
-			istringstream ss1;
-			ss1.str(line2);
-			counter =0;
-			while(ss1 >> word)
-			{
-				Ciphertext_file[1][counter] = stol(word); counter++;
-			}
+                        istringstream ss;
+                        ss.str(line1);
+                        counter =0;
+                        while(ss >> word){
 
-			istringstream ss2;		
-			ss2.str(line3);
-			counter =0;
-			while(ss2 >> word)
-			{
-				Ciphertext2_file[counter] = stol(word); counter++;
-			}
+                                Ciphertext_file[0][counter] = stol(word); counter++;}
+
+                        istringstream ss1;
+                        ss1.str(line2);
+                        counter =0;
+                        while(ss1 >> word)
+                        {
+                                Ciphertext_file[1][counter] = stol(word); counter++;
+                        }
+
+                        istringstream ss2;
+                        ss2.str(line3);
+                        counter =0;
+                        while(ss2 >> word)
+                        {
+                                Ciphertext2_file[counter] = stol(word); counter++;
+                        }
 
 			PEKS_Test(message, Ciphertext_file, SKtd_FFT);
 			rep = 0;
@@ -415,6 +380,8 @@ void findFileByKeywords(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path, cons
 
 	}		
 
+
+	cout << "We are LEAVING Find FILE BY KEYWORD now: "<<endl<<endl;
 }
 
 
@@ -880,7 +847,6 @@ void receivingPeksServer(string serverPath){
 			memcpy (reply1.data (), "World", 8);
 			socket.send (reply1);
 
-			//sleep(1);
 			zmq::message_t request2;
 			socket.recv (&request2);
 			string rpl2 = string(static_cast<char*>(request2.data()), request2.size());
@@ -890,9 +856,6 @@ void receivingPeksServer(string serverPath){
 			memcpy (reply2.data (), "World", 8);
 			socket.send (reply2);	
 
-
-			//sleep(1);	
-			//sleep(1);	
 			zmq::message_t request3;
 			socket.recv (&request3);
 			string rpl3 = string(static_cast<char*>(request3.data()), request3.size());
@@ -906,41 +869,24 @@ void receivingPeksServer(string serverPath){
 			counterKeywords++; 
 
 			//  Do some 'work'
-
 			//  Send reply back to client
-
 		}
 	}
-
-
 	cout << "All files have been received and stored in "<< serverPath << "folder "<< endl;
 	socket.close();
-
 }
-
-
-
-
-
-
 
 void writeTrapdoorFile(string fname_with_path, ZZX SK_td[2]){
 	fname_with_path.append("trapdoor");
 	ofstream ofile;
 
-	auto file_write_start = time_now;
 	ofile.open (fname_with_path.c_str(),  ios::binary);
 	ofile << SK_td[0]<<endl;
 	ofile<< SK_td[1];
-	auto file_write_end = time_now;
 
 	ofile.close();
-	float file_write_time = (float)(std::chrono::duration_cast<std::chrono::microseconds>(file_write_end-file_write_start).count());
-	cout << "Writing Trapdoor to file takes " << file_write_time << " microseconds" << endl;
-	
 }
 
-// burnett
 void sendTrapdoorToServer(string path){
 	zmq::context_t context(1);
 	zmq::socket_t socket(context,ZMQ_REQ);
@@ -960,7 +906,22 @@ void sendTrapdoorToServer(string path){
 	fstream ifile;
 	string fname_with_path = path + "trapdoor";
 
-	disk_start = time_now;
+	if(BENCHMARK_ALL){
+		disk_start = time_now;
+		for(int i = 0; i < NUM_TESTS; i++){ 
+			ifile.open(fname_with_path.c_str());
+			while(getline(ifile, line1)){
+				sizeLine1 = (size_t)line1.length();
+				zmq::message_t request_line1(sizeLine1);
+				memcpy (request_line1.data (), line1.c_str(), sizeLine1);
+			}
+			ifile.close();
+		}
+		disk_end = time_now;
+		disk_sum = (float)(std::chrono::duration_cast<std::chrono::milliseconds>(disk_end-disk_start).count());
+		cout<<	"Reading Disk takes   " << disk_sum / NUM_TESTS << " milliseconds" << endl;
+	}
+
 	ifile.open(fname_with_path.c_str());
 	if (!ifile.is_open()){cout << "The file "<<fname_with_path<< "is NOT fine \n"<<endl;}
 	while(getline(ifile, line1)){
@@ -977,14 +938,10 @@ void sendTrapdoorToServer(string path){
 
 		network_sum += (float)(std::chrono::duration_cast<std::chrono::microseconds>(network_end-network_start).count());
 	}
-	disk_end = time_now;
-	disk_sum = (float)(std::chrono::duration_cast<std::chrono::microseconds>(disk_end-disk_start).count());
-	disk_sum -= network_sum;
+	ifile.close();
 
 	cout<<	"Sending Trapdoor takes   " << network_sum << " microseconds" << endl;
-	cout<<	"Reading Disk takes   " << disk_sum << " microseconds" << endl;
 
-	ifile.close();
 	socket.close();
 }
 
@@ -992,16 +949,19 @@ void sendTrapdoorToServer(string path){
 void writeTrapdoortoFileServer(string fname_with_path,  string x){
 	fname_with_path.append("trapdoor");
 	ofstream ofile;
+	int num_iterations = BENCHMARK_ALL ? NUM_TESTS : 1;
 
 	auto file_write_start = time_now;
-	ofile.open (fname_with_path.c_str(), ios_base::app | ios::binary); 
-	ofile << x ;
-	ofile<<endl;
+	for(int i = 0; i < num_iterations; i++){
+		ofile.open (fname_with_path.c_str(), ios_base::app | ios::binary); 
+		ofile << x ;
+		ofile << endl;
+		ofile.close();
+	}
 	auto file_write_end = time_now;
 
-	float file_write_time = (float)(std::chrono::duration_cast<std::chrono::microseconds>(file_write_end-file_write_start).count());
-	cout << "Writing Trapdoor to file server takes " << file_write_time << " microseconds" << endl;
-	ofile.close();
+	float file_write_time = (float)(std::chrono::duration_cast<std::chrono::milliseconds>(file_write_end-file_write_start).count());
+	cout << "Writing Trapdoor to file server takes " << file_write_time/num_iterations << " milliseconds" << endl;
 }
 
 
@@ -1060,7 +1020,6 @@ void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path
 	CC_t SKtd_FFT[N0]; 
 	long  Ciphertext_file[2][N0] = {0};
 	long Ciphertext2_file[N0] = {0};
-	int counter = 0;
 	long message[N0];
 	string auxstring[N0];
 	string line1, line2, line3;
@@ -1080,11 +1039,9 @@ void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path
 		ifile.close();
 		fname_with_path.append(path);
 		string file_name = "";
-		//	file_name.append("/");
 		temp1 = to_string(filecount);
 		file_name.append(temp1);
 		fileNameforList.append(file_name);
-		//fileNameforList.append(".");
 		file_name.append("sc");
 		fname_with_path.append(file_name);
 		cout << file_name << " being opend"<<endl;
@@ -1093,33 +1050,24 @@ void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path
 		string word ="";
 		string target = "";
 		while (getline(ifile,line1)){
+			int counter = 0, counter1 = 0, counter2 = 0;
 			getline(ifile,line2);
 			getline(ifile,line3);
+			istringstream ss, ss1, ss2;
 
-			istringstream ss;
 			ss.str(line1);
-			counter =0;
-			while(ss >> word){
-				Ciphertext_file[0][counter] = stol(word); counter++;
-			}
+			while(ss >> word){ Ciphertext_file[0][counter] = stol(word); counter++; }
 
-			istringstream ss1;
 			ss1.str(line2);
-			counter =0;
-			while(ss1 >> word){
-				Ciphertext_file[1][counter] = stol(word); counter++;
-			}
+			while(ss1 >> word){ Ciphertext_file[1][counter1] = stol(word); counter1++; }
 
-			istringstream ss2;		
 			ss2.str(line3);
-			counter =0;
-			while(ss2 >> word){
-				Ciphertext2_file[counter] = stol(word); counter++;
-			}
+			while(ss2 >> word){ Ciphertext2_file[counter2] = stol(word); counter2++; }
+
 			peks_test_start = time_now;
 			PEKS_Test(message, Ciphertext_file, SKtd_FFT);
 			peks_test_end = time_now;
-			peks_test_total += (float)(std::chrono::duration_cast<std::chrono::microseconds>(peks_test_end-peks_test_start).count());
+			peks_test_total += (float)(std::chrono::duration_cast<std::chrono::milliseconds>(peks_test_end-peks_test_start).count());
 			rep = 0;
 			for(int j=0; j<N0; j++){
 
@@ -1137,13 +1085,13 @@ void findFileByKeywordsServer(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path
 		}
 	}
 	auto search_files_end = time_now;
-	float total_time = (float)(std::chrono::duration_cast<std::chrono::microseconds>(search_files_end-search_files_start).count());
+	float total_time = (float)(std::chrono::duration_cast<std::chrono::milliseconds>(search_files_end-search_files_start).count());
 	float search_files_total = total_time - peks_test_total;
 	
-	cout << "Reading Trapdoor from file server takes " << file_read_time << " microseconds" << endl;
-	cout << "Total search time: " << total_time << " microseconds" << endl;
-	cout << "File searching time: " << search_files_total << " microseconds" << endl;
-	cout << "Peks test total time: " << peks_test_total << " microseconds" << endl;
+	cout << "Reading Trapdoor from file server takes " << file_read_time << " milliseconds" << endl;
+	cout << "Total search time: " << total_time << " milliseconds" << endl;
+	cout << "File searching time: " << search_files_total << " milliseconds" << endl;
+	cout << "Peks test total time: " << peks_test_total << " milliseconds" << endl;
 	
 	ifile.close();		
 }
@@ -1390,10 +1338,28 @@ labelReceiverMenu:
 		   if (choiceReceiver == 2 ){
 			   flagTrapdoor = true;
 
-			   myTrapdoorGenerator(MSKD,SK_td);
-			   writeTrapdoorFile(skPath, SK_td);
-			   cout << "Trapdoor has been succefully generated. \n";	cout << "\n\n\n\n\n\n\n\n\n\n";
+			   cout << endl<<"Please keyin the keyword you would like to be searched: ";
+			   string word;
+			   cin >> word;
+			   int num_iterations = BENCHMARK_ALL ? NUM_TESTS : 1;
 
+			   auto trapdoor_start = time_now;
+			   for( int i = 0; i < num_iterations; i++ )
+			   	myTrapdoorGenerator(MSKD,SK_td, word);
+			   auto trapdoor_end = time_now;
+			   cout << "Trapdoor Generation Takes " 
+				<< (float) std::chrono::duration_cast<std::chrono::milliseconds>(trapdoor_end-trapdoor_start).count() / num_iterations
+				<< " ms" << endl;
+
+			   auto file_write_start = time_now;
+			   for( int i = 0; i < num_iterations; i++ )
+			   	writeTrapdoorFile(skPath, SK_td);
+			   auto file_write_end = time_now;
+			   cout << "Trapdoor write to file take " 
+			   	<< (float)(std::chrono::duration_cast<std::chrono::milliseconds>(file_write_end-file_write_start).count()) / num_iterations
+				<< " ms" << endl;
+
+			   cout << "Trapdoor has been succefully generated. \n";	cout << "\n\n\n\n\n\n\n\n\n\n";
 			   sleep (1);
 			   goto labelReceiverMenu;
 		   }
