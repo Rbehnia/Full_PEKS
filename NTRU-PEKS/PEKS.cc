@@ -335,10 +335,10 @@ void findFileByKeywords(TYPE_KEYWORD_DICTIONARY & listOfFiles, string path, cons
 	int counter = 0;
 	long message[N0];
 	string auxstring[N0];
-    string line1 = "";
-    string line2 = "";	
+        string line1 = "";
+    	string line2 = "";	
 	string line3 = "";
-    ZZXToFFT(SKtd_FFT, SK_td[1]);
+    	ZZXToFFT(SKtd_FFT, SK_td[1]);
 	string temp1,temp2="",fileNameforList="", fname_with_path;
 	fstream ifile;
 	
@@ -443,9 +443,7 @@ void storeSKDatatoFile(ZZX MSK[4], MSK_Data * MSKD, string path){
 	for (int i = 0; i<4;i++)
 		
 		ofileMSKDPrk << MSKD->PrK[i] <<endl ;
-	
-	
-	
+
 	fname_with_path = "";
 	//recreate the file name
 	fname_with_path.append(path);
@@ -659,8 +657,7 @@ void storePKDatatoFile(ZZ_pX MPK, MPK_Data * MPKD, string path){
 	//cout << fname_with_path<<endl;
 	ofstream ofileMPK;
 	ofileMPK.open (fname_with_path.c_str(),  ios::binary); 
-/*	for (int i = 0;i<N0;i++)
-		ofileMPK << MPK[i]<<endl;*/
+
 	ofileMPK<<MPK;
 	
 	fname_with_path = "";
