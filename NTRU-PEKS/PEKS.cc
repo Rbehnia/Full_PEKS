@@ -1497,115 +1497,11 @@ if (choiceMain == 2){
 	if (choiceMain == 4){exit(1);}
 
 
-//=========================================== MENU STUFF
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-    t2 = clock();
-    diff = ((float)t2 - (float)t1)/1000000.0F;
-    cout << "It took " << diff << " seconds to generate user keys" << endl;
-
-
-
-    //==============================================================================
-    //Key extraction bench and encryption/decryption bench
-    //==============================================================================
-    const unsigned int nb_trdb = 1000;
-    const unsigned int nb_crypb = 1000;
-    //const unsigned int nb_decrypb = 1000;
-
-
-    cout << "\n===================================================================\n RUNNING PEKS BENCH FOR ";
-    cout << nb_crypb << " DIFFERENT KEYWORDS\n===================================================================\n";
-  // Encrypt_Bench(nb_crypb, MPKD, MSKD);
-
-
-    cout << "\n===================================================================\n RUNNING TRAPDOOR BENCH FOR ";
-    cout << nb_trdb << " DIFFERENT KEYWORDS\n===================================================================\n";
- //  Trapdoor_Bench(nb_trdb, MSKD);
-
-    ///==============================================================================
-    //Key extraction test and encryption/decryption test
-    //==============================================================================
-    const unsigned int nb_trdt = 100;
-  const unsigned int nb_crypt = 100;
-
-
-    cout << "\n===================================================================\n CHECKING PEKS VALIDITY FOR ";
-    cout << nb_crypt << " DIFFERENT KEYWORDS\n===================================================================\n";
- //  Encrypt_Test(nb_crypt, MPKD, MSKD);
-
-    cout << "\n===================================================================\n CHECKING TRAPDOOR VALIDITY FOR ";
-    cout << nb_trdt << " DIFFERENT KEYWORDS\n===================================================================\n";*/
-//Trapdoor_Test(nb_trdt, MSKD);
-
-/*for (int i = 1; i < 2; i++){
-	for (int j = 1; j < 5; j++){
-
-		cout << SK_tr[i][j]<<endl;
-		}}*/
-
-	
-//==============================================================================
-//==============================================================================
-//                               
-//                      EXTRACTING AND ENCRYPTING KEYWORDS
-//==============================================================================
-//==============================================================================
-	
-/*	path = "/home/bob/Documents/MyCode/NTRU-PEKS/textfiles";
-	string file_name;
-	int counterKeys;
-	for (int j = 1; j < numOfFiles; j++){
-			string keywordExtracted[25];
-
-	string temp;
-	vec_ZZ keyword_zz;
-	int rep[numOfKeywords] = {0};
-		TYPE_KEYWORD_DICTIONARY myset;
-		file_name = "/";
-		temp = to_string(j);
-		file_name.append(temp);
-		file_name.append(".");
-		//cout << file_name;
-	extractKeywords(myset, file_name, path);
-	writeKeywords(myset, file_name, path);
-	extractKeywordFile(keywordExtracted,  file_name,path, counterKeys);
-	KeywordstoPEKS(Ciphertext, Ciphertext2,file_name, path, keywordExtracted,counterKeys,MPKD);
-		
-	}*/
-//==============================================================================
-//==============================================================================
-//                               
-//                      COMPUTING TRAPDOOR
-//==============================================================================
-//==============================================================================
-
-
-	//myTrapdoorGenerator(MSKD,SK_td);
-//
-//==============================================================================
-//==============================================================================
-//                               
-//                      SEARCHING IN FILES
-//==============================================================================
-
-	
 
 	free(MSKD);
 	free(MPKD);	
